@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDo.Models;
 
@@ -11,9 +12,10 @@ using ToDo.Models;
 namespace ToDo.Migrations
 {
     [DbContext(typeof(ToDoDbContext))]
-    partial class ToDoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230310031039_change_t_UploadFile_FK_policy_to_on_delete_cascade")]
+    partial class change_t_UploadFile_FK_policy_to_on_delete_cascade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,9 +103,6 @@ namespace ToDo.Migrations
                     b.Property<bool>("Enable")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("EndTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<Guid>("InsertEmployeeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -118,9 +117,6 @@ namespace ToDo.Migrations
 
                     b.Property<int>("Orders")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("StartTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("UpdateEmployeeId")
                         .HasColumnType("uniqueidentifier");

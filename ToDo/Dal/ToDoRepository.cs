@@ -26,7 +26,7 @@ namespace ToDo.Dal
                 .Include(x => x.InsertEmployee)
                 .Include(x => x.UpdateEmployee)
                 .Include(x => x.UploadFiles)
-                .FirstOrDefaultAsync(x => x.TodoId == id);
+                .FirstOrDefaultAsync(x => x.ToDoId == id);
             return _mapper.Map<ToDoItemSelectDto>(todoItem);
         }
 

@@ -14,5 +14,21 @@ public class DtoMappingProfile: Profile
             .ReverseMap();
 
         CreateMap<UploadFile, UploadFileDto>();
+
+
+        #region Post用的DTO轉換為Entity
+
+        CreateMap<UploadFilePostDto, UploadFile>();
+        CreateMap<ToDoItemPostDto, ToDoItem>();
+
+        #endregion
+
+        #region Put用的DTO轉換為Entity
+
+        CreateMap<ToDoItemPutDto, ToDoItem>()
+            .ForMember(dest => dest.UpdateTime, opt => opt.MapFrom(src => DateTime.Now))
+            .ForMember(dest => dest.UpdateEmployeeId, opt => opt.MapFrom(src => Guid.Parse("cc5fab39-0ee8-4615-b437-73ff89c81019")));
+
+        #endregion
     }
 }

@@ -20,7 +20,8 @@ public class UploadFileConfig: IEntityTypeConfiguration<UploadFile>
         builder.HasOne(d => d.ToDoItem)
             .WithMany(p => p.UploadFiles)
             .HasForeignKey(d => d.ToDoId)
-            .OnDelete(DeleteBehavior.ClientSetNull)
+            // .OnDelete(DeleteBehavior.ClientSetNull)
+            .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("FK_UploadFile_ToDoId");
     }
 }

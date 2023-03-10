@@ -19,7 +19,9 @@
 
   <ItemGroup>
     <Folder Include="Mappers\" />
-    <Folder Include="Dtos\" />
+    <Folder Include="Abstracts\" />
+    <Folder Include="Services\Impl\" />
+    <Folder Include="ValidationAttributes\" />
     <Folder Include="Parameters\" />
   </ItemGroup>
 

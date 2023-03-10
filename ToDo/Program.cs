@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ToDo.Models;
+using ToDo.Services;
+using ToDo.Services.Impl;
 
 namespace ToDo
 {
@@ -27,6 +29,9 @@ namespace ToDo
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             #endregion
+
+            builder.Services.AddScoped<IToDoItemService, ToDoItemService>();
+
 
             var app = builder.Build();
 

@@ -8,9 +8,9 @@ public class ToDoItemConfig: IEntityTypeConfiguration<ToDoItem>
     public void Configure(EntityTypeBuilder<ToDoItem> builder)
     {
         builder.ToTable("t_ToDoItem");
-        builder.HasKey(e => e.TodoId);
+        builder.HasKey(e => e.ToDoId);
 
-        builder.Property(e => e.TodoId).HasDefaultValueSql("(newid())");
+        builder.Property(e => e.ToDoId).HasDefaultValueSql("(newid())");
         builder.Property(e => e.InsertTime)
             .HasColumnType("datetime")
             .HasDefaultValueSql("(getdate())");
