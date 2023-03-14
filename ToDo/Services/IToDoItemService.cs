@@ -8,6 +8,7 @@ public interface IToDoItemService
     Task<List<ToDoItemSelectDto>> GetToDoItemsAsync(TodoParameter parameters);
     Task<ToDoItemSelectDto?> GetOneAsync(Guid id);
     Task<Guid> AddAsync(ToDoItemPostDto dto);
+    Task<Guid> AddAsync(ToDoItemPostWithFilesDto dto);
     Task<int> UpdateAsync(Guid id, ToDoItemPutDto dto);
     Task<int> DeleteAsync(Guid id);
 }

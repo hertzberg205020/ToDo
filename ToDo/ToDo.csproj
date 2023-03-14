@@ -20,9 +20,12 @@
   <ItemGroup>
     <Folder Include="Mappers\" />
     <Folder Include="Abstracts\" />
+    <Folder Include="Helper\" />
+    <Folder Include="ModelBinder\" />
     <Folder Include="Services\Impl\" />
     <Folder Include="ValidationAttributes\" />
     <Folder Include="Parameters\" />
+    <Folder Include="wwwroot\UploadFiles\" />
   </ItemGroup>
 
 </Project>

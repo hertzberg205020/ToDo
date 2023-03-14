@@ -10,11 +10,13 @@ public class ToDoItemService: IToDoItemService
 {
     private readonly ToDoDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public ToDoItemService(ToDoDbContext context, IMapper mapper)
+    public ToDoItemService(ToDoDbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     {
         _context = context;
         _mapper = mapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<List<ToDoItemSelectDto>> GetToDoItemsAsync(TodoParameter parameters)
@@ -73,6 +75,27 @@ public class ToDoItemService: IToDoItemService
 
         item.InsertEmployeeId = Guid.Parse("cc5fab39-0ee8-4615-b437-73ff89c81019");
         item.UpdateEmployeeId = Guid.Parse("f3c7567a-085b-40e9-8ad7-e0822bc7156a");
+
+        await _context.ToDoList.AddAsync(item);
+        await _context.SaveChangesAsync();
+        return item.ToDoId;
+    }
+
+    public async Task<Guid> AddAsync(ToDoItemPostWithFilesDto dto)
+    {
+        var claims = _httpContextAccessor.HttpContext?.User.Claims.ToList();
+        if (claims == null)
+        {
+            throw new Exception("沒有登入");
+        }
+        var employeeId = claims.First(e => e.Type == "EmployeeId").Value;
+        ToDoItem item = _mapper.Map<ToDoItem>(dto);
+
+        item.InsertTime = DateTime.Now;
+        item.UpdateTime = DateTime.Now;
+
+        item.InsertEmployeeId = Guid.Parse(employeeId);
+        item.UpdateEmployeeId = Guid.Parse(employeeId);
 
         await _context.ToDoList.AddAsync(item);
         await _context.SaveChangesAsync();

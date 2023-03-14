@@ -1,9 +1,11 @@
 ﻿using System.Text.Json;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ToDo.Dtos;
+using ToDo.Helper;
 using ToDo.Models;
 using ToDo.Parameters;
 using ToDo.Services;
@@ -18,12 +20,14 @@ namespace ToDo.Controllers
         private readonly ToDoDbContext _context;
         private readonly IMapper _mapper;
         private readonly IToDoItemService _service;
+        private readonly IWebHostEnvironment _env;
 
-        public ToDoController(ToDoDbContext context, IMapper mapper, IToDoItemService service)
+        public ToDoController(ToDoDbContext context, IMapper mapper, IToDoItemService service, IWebHostEnvironment env)
         {
             _context = context;
             _mapper = mapper;
             _service = service;
+            _env = env;
         }
 
         /// <summary>
@@ -49,6 +53,7 @@ namespace ToDo.Controllers
         }
 
         [HttpGet("{toDoItemId}")]
+        [Authorize(Roles = "select")]
         public async Task<ActionResult<ToDoItemSelectDto>> Get(Guid toDoItemId)
         {
 
@@ -169,6 +174,35 @@ namespace ToDo.Controllers
             return CreatedAtAction(nameof(Get), new { toDoItemId = id }, item);
         }
 
+        [HttpPost("withFiles")]
+        public async Task<IActionResult> PostWithFiles([FromForm] ToDoItemPostWithFilesDto item)
+        {
+            var id = await _service.AddAsync(item);
+            var folderPath = Path.Combine(_env.WebRootPath, "UploadFiles", id.ToString());
+
+            if (item.Files == null || item.Files.Count <= 0)
+            {
+                return Ok();
+            }
+
+            foreach (var file in item.Files)
+            {
+                var res = await UploadFileHelper.UploadFileAsync(file, folderPath);
+                if (res)
+                {
+                    var uploadFile = new UploadFile
+                    {
+                        Name = file.FileName,
+                        Src = UploadFileHelper.GetFileSrc(file, id),
+                        ToDoId = id
+                    };
+                    _context.UploadFiles.Add(uploadFile);
+                }
+            }
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
         /// <summary>
         /// 更新資料
         /// </summary>
@@ -276,10 +310,10 @@ namespace ToDo.Controllers
             return NoContent();
         }
 
-        [HttpDelete("list/{IdList}")]
-        public IActionResult DeleteList(string IdList)
+        [HttpDelete("list/{idList}")]
+        public IActionResult DeleteList(string idList)
         {
-            List<Guid>? deleteList = JsonSerializer.Deserialize<List<Guid>>(IdList);
+            List<Guid>? deleteList = JsonSerializer.Deserialize<List<Guid>>(idList);
             if (deleteList == null)
             {
                 return BadRequest();

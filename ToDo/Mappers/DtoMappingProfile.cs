@@ -20,6 +20,7 @@ public class DtoMappingProfile: Profile
 
         CreateMap<UploadFilePostDto, UploadFile>();
         CreateMap<ToDoItemPostDto, ToDoItem>();
+        CreateMap<ToDoItemPostWithFilesDto, ToDoItem>();
 
         #endregion
 
